@@ -7,6 +7,8 @@ import FinalReviewScene from './FinalReviewScene';
 import FallacySpottingScene from './FallacySpottingScene';
 import FallacyFightersLevel2 from './FallacyFightersLevel2';
 import GrandPersuasionLevel3 from './GrandPersuasionLevel3';
+import AudienceMatchmakerScene from './AudienceMatchmakerScene';
+import PersuasionMixerScene from './PersuasionMixerScene';
 import { Trophy, Star, RotateCcw } from 'lucide-react';
 
 const MinimalApp: React.FC = () => {
@@ -17,6 +19,8 @@ const MinimalApp: React.FC = () => {
   const [showLevel3, setShowLevel3] = useState(false);
   const [level3Completed, setLevel3Completed] = useState(false);
   const [showFallacySpotting, setShowFallacySpotting] = useState(false);
+  const [showAudienceMatchmaker, setShowAudienceMatchmaker] = useState(false);
+  const [showPersuasionMixer, setShowPersuasionMixer] = useState(false);
 
   const scenes = [
     { title: 'Character Choice', component: CharacterChoiceScreen },
@@ -59,6 +63,24 @@ const MinimalApp: React.FC = () => {
       />
     );
   }
+  // Show Audience Matchmaker if requested
+  if (showAudienceMatchmaker) {
+    return (
+      <AudienceMatchmakerScene
+        onNext={() => setShowAudienceMatchmaker(false)}
+      />
+    );
+  }
+
+  // Show Persuasion Mixer if requested
+  if (showPersuasionMixer) {
+    return (
+      <PersuasionMixerScene
+        onNext={() => setShowPersuasionMixer(false)}
+      />
+    );
+  }
+
   // Show Level 2 if requested
   if (showLevel2) {
     return (
@@ -148,6 +170,20 @@ const MinimalApp: React.FC = () => {
               className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-teal-500 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
             >
               🧠 Fallacy Spotting
+            </button>
+            
+            <button
+              onClick={() => setShowAudienceMatchmaker(true)}
+              className="flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
+              🎯 Audience Matchmaker
+            </button>
+            
+            <button
+              onClick={() => setShowPersuasionMixer(true)}
+              className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
+              🧩 Persuasion Mixer
             </button>
             
             <button
