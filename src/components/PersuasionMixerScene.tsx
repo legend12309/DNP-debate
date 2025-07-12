@@ -36,10 +36,32 @@ const PersuasionMixerScene: React.FC<PersuasionMixerSceneProps> = ({ onNext }) =
   const [xp, setXp] = useState(0);
   const [showFeedback, setShowFeedback] = useState<string | null>(null);
   const [sentenceCount, setSentenceCount] = useState(0);
+  const [showRetakeOption, setShowRetakeOption] = useState(false);
+  const [shakeAnimation, setShakeAnimation] = useState(false);
 
   const requiredXP = 30;
   const maxSentences = 4;
   const canProceed = xp >= requiredXP;
+
+  const handleRetake = () => {
+    setSelectedBlocks([]);
+    setConstructedSentences([]);
+    setXp(0);
+    setShowFeedback(null);
+    setSentenceCount(0);
+    setShowRetakeOption(false);
+    setShakeAnimation(false);
+  };
+
+  const handleProceedAttempt = () => {
+    if (!canProceed) {
+      setShowRetakeOption(true);
+      setShakeAnimation(true);
+      setTimeout(() => setShakeAnimation(false), 600);
+    } else {
+      onNext();
+    }
+  };
 
   const handleBlockSelect = (block: Block) => {
     if (selectedBlocks.length < 3 && !selectedBlocks.find(b => b.id === block.id)) {
@@ -118,17 +140,34 @@ const PersuasionMixerScene: React.FC<PersuasionMixerSceneProps> = ({ onNext }) =
             </div>
             
             {/* Animated XP Progress Bar */}
-            <div className="w-32 bg-green-700/50 rounded-full h-3 overflow-hidden">
+            <div className={`w-32 bg-green-700/50 rounded-full h-3 overflow-hidden ${canProceed ? 'shadow-lg shadow-yellow-400/50' : ''}`}>
               <div 
-                className="bg-gradient-to-r from-yellow-400 to-orange-400 h-full rounded-full transition-all duration-700 ease-out"
+                className={`bg-gradient-to-r from-yellow-400 to-orange-400 h-3 rounded-full transition-all duration-700 ease-out ${canProceed ? 'animate-pulse' : ''}`}
                 style={{ width: `${Math.min((xp / requiredXP) * 100, 100)}%` }}
               />
             </div>
           </div>
         </div>
 
+        {/* Retake Option */}
+        {showRetakeOption && !canProceed && sentenceCount >= maxSentences && (
+          <div className="bg-red-100/20 border-2 border-red-300/50 rounded-2xl p-6 mb-8 animate-fade-in">
+            <div className="text-center">
+              <div className="text-3xl mb-4">❌</div>
+              <h3 className="text-xl font-bold text-red-200 mb-2">You haven't earned enough XP to continue.</h3>
+              <p className="text-red-300 mb-6 italic">"Give it another shot — debate mastery takes practice!"</p>
+              <button
+                onClick={handleRetake}
+                className="bg-gradient-to-r from-red-300 to-red-400 text-red-900 px-8 py-3 rounded-full font-semibold hover:from-red-400 hover:to-red-500 hover:scale-105 transition-all duration-300 shadow-lg"
+              >
+                🔁 Retake Challenge
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Topic Card */}
-        <div className="bg-green-600/20 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-400/30 p-8 mb-8 text-center">
+        <div className={`bg-green-600/20 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-400/30 p-8 mb-8 text-center ${shakeAnimation ? 'animate-pulse' : ''}`}>
           <h2 className="text-2xl font-bold text-green-50 mb-4" style={{ fontFamily: 'Caveat, cursive' }}>
             🎯 Topic: School Start Times
           </h2>
@@ -305,12 +344,11 @@ const PersuasionMixerScene: React.FC<PersuasionMixerSceneProps> = ({ onNext }) =
         {/* Proceed Button */}
         <div className="text-center">
           <button
-            onClick={onNext}
-            disabled={!canProceed}
+            onClick={handleProceedAttempt}
             className={`
               flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 mx-auto
               ${canProceed
-                ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-green-900 hover:scale-105 shadow-xl'
+                ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-green-900 hover:scale-105 shadow-xl shadow-yellow-400/30'
                 : 'bg-green-600/30 text-green-400 cursor-not-allowed'
               }
             `}

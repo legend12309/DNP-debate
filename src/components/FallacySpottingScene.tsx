@@ -63,12 +63,35 @@ const FallacySpottingScene: React.FC<FallacySpottingSceneProps> = ({ onNext }) =
   const [xp, setXp] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<Set<number>>(new Set());
   const [questionResults, setQuestionResults] = useState<{ [key: number]: boolean }>({});
+  const [showRetakeOption, setShowRetakeOption] = useState(false);
+  const [shakeAnimation, setShakeAnimation] = useState(false);
 
   const currentQ = fallacyQuestions[currentQuestion];
   const maxXP = 40; // 4 questions × 10 XP each
   const requiredXP = 30;
   const canProceed = xp >= requiredXP;
   const allQuestionsAnswered = answeredQuestions.size === fallacyQuestions.length;
+
+  const handleRetake = () => {
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setShowFeedback(false);
+    setXp(0);
+    setAnsweredQuestions(new Set());
+    setQuestionResults({});
+    setShowRetakeOption(false);
+    setShakeAnimation(false);
+  };
+
+  const handleProceedAttempt = () => {
+    if (!canProceed) {
+      setShowRetakeOption(true);
+      setShakeAnimation(true);
+      setTimeout(() => setShakeAnimation(false), 600);
+    } else {
+      onNext();
+    }
+  };
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (answeredQuestions.has(currentQuestion)) return;
@@ -124,17 +147,34 @@ const FallacySpottingScene: React.FC<FallacySpottingSceneProps> = ({ onNext }) =
             </div>
             
             {/* Animated XP Progress Bar */}
-            <div className="w-32 bg-green-700/50 rounded-full h-3 overflow-hidden">
+            <div className={`w-32 bg-green-700/50 rounded-full h-3 overflow-hidden ${canProceed ? 'shadow-lg shadow-yellow-400/50' : ''}`}>
               <div 
-                className="bg-gradient-to-r from-yellow-400 to-orange-400 h-full rounded-full transition-all duration-700 ease-out"
+                className={`bg-gradient-to-r from-yellow-400 to-orange-400 h-3 rounded-full transition-all duration-700 ease-out ${canProceed ? 'animate-pulse' : ''}`}
                 style={{ width: `${Math.min((xp / requiredXP) * 100, 100)}%` }}
               />
             </div>
           </div>
         </div>
 
+        {/* Retake Option */}
+        {showRetakeOption && !canProceed && allQuestionsAnswered && (
+          <div className="bg-red-100/20 border-2 border-red-300/50 rounded-2xl p-6 mb-8 animate-fade-in">
+            <div className="text-center">
+              <div className="text-3xl mb-4">❌</div>
+              <h3 className="text-xl font-bold text-red-200 mb-2">You haven't earned enough XP to continue.</h3>
+              <p className="text-red-300 mb-6 italic">"Give it another shot — debate mastery takes practice!"</p>
+              <button
+                onClick={handleRetake}
+                className="bg-gradient-to-r from-red-300 to-red-400 text-red-900 px-8 py-3 rounded-full font-semibold hover:from-red-400 hover:to-red-500 hover:scale-105 transition-all duration-300 shadow-lg"
+              >
+                🔁 Retake Challenge
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Question Card */}
-        <div className="bg-green-600/20 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-400/30 overflow-hidden mb-8">
+        <div className={`bg-green-600/20 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-400/30 overflow-hidden mb-8 ${shakeAnimation ? 'animate-pulse' : ''}`}>
           <div className="bg-gradient-to-r from-green-500/30 to-green-400/30 p-6 border-b border-green-400/30">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-green-50" style={{ fontFamily: 'Caveat, cursive' }}>
@@ -270,12 +310,11 @@ const FallacySpottingScene: React.FC<FallacySpottingSceneProps> = ({ onNext }) =
               </button>
             ) : (
               <button
-                onClick={onNext}
-                disabled={!canProceed}
+                onClick={handleProceedAttempt}
                 className={`
                   flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300
                   ${canProceed
-                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-green-900 hover:scale-105 shadow-xl'
+                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-green-900 hover:scale-105 shadow-xl shadow-yellow-400/30'
                     : 'bg-green-600/30 text-green-400 cursor-not-allowed'
                   }
                 `}
