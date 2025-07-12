@@ -4,6 +4,7 @@ import CharacterChoiceScreen from './CharacterChoiceScreen';
 import RuleBreakingScene from './RuleBreakingScene';
 import RebuttalSelector from './RebuttalSelector';
 import FinalReviewScene from './FinalReviewScene';
+import FallacySpottingScene from './FallacySpottingScene';
 import FallacyFightersLevel2 from './FallacyFightersLevel2';
 import GrandPersuasionLevel3 from './GrandPersuasionLevel3';
 import { Trophy, Star, RotateCcw } from 'lucide-react';
@@ -15,12 +16,14 @@ const MinimalApp: React.FC = () => {
   const [level2Completed, setLevel2Completed] = useState(false);
   const [showLevel3, setShowLevel3] = useState(false);
   const [level3Completed, setLevel3Completed] = useState(false);
+  const [showFallacySpotting, setShowFallacySpotting] = useState(false);
 
   const scenes = [
     { title: 'Character Choice', component: CharacterChoiceScreen },
     { title: 'Rule Breaking', component: RuleBreakingScene },
     { title: 'Rebuttal Practice', component: RebuttalSelector },
-    { title: 'Final Review', component: FinalReviewScene }
+    { title: 'Final Review', component: FinalReviewScene },
+    { title: 'Fallacy Spotting', component: FallacySpottingScene }
   ];
 
   const handleNext = () => {
@@ -48,6 +51,14 @@ const MinimalApp: React.FC = () => {
     setShowLevel3(false);
   };
 
+  // Show Fallacy Spotting if requested
+  if (showFallacySpotting) {
+    return (
+      <FallacySpottingScene
+        onNext={() => setShowFallacySpotting(false)}
+      />
+    );
+  }
   // Show Level 2 if requested
   if (showLevel2) {
     return (
@@ -84,7 +95,7 @@ const MinimalApp: React.FC = () => {
           
           <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">What You've Learned</h2>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
                   <span className="text-white font-bold text-xl">1</span>
@@ -113,6 +124,13 @@ const MinimalApp: React.FC = () => {
                 <h3 className="font-semibold text-gray-800">Judging Skills</h3>
                 <p className="text-sm text-gray-600">Evaluating debates</p>
               </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-white font-bold text-xl">5</span>
+                </div>
+                <h3 className="font-semibold text-gray-800">Fallacy Detection</h3>
+                <p className="text-sm text-gray-600">Logical reasoning</p>
+              </div>
             </div>
           </div>
 
@@ -123,6 +141,13 @@ const MinimalApp: React.FC = () => {
             >
               <RotateCcw className="w-5 h-5" />
               Practice Again
+            </button>
+            
+            <button
+              onClick={() => setShowFallacySpotting(true)}
+              className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-teal-500 text-white px-8 py-4 rounded-full font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
+              🧠 Fallacy Spotting
             </button>
             
             <button
