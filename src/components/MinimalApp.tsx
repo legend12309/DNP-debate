@@ -4,7 +4,6 @@ import CharacterChoiceScreen from './CharacterChoiceScreen';
 import RuleBreakingScene from './RuleBreakingScene';
 import RebuttalSelector from './RebuttalSelector';
 import FinalReviewScene from './FinalReviewScene';
-import FallacySpottingScene from './FallacySpottingScene';
 import FallacyFightersLevel2 from './FallacyFightersLevel2';
 import GrandPersuasionLevel3 from './GrandPersuasionLevel3';
 import AudienceMatchmakerScene from './AudienceMatchmakerScene';
@@ -23,8 +22,7 @@ const MinimalApp: React.FC = () => {
     { title: 'Character Choice', component: CharacterChoiceScreen },
     { title: 'Rule Breaking', component: RuleBreakingScene },
     { title: 'Rebuttal Practice', component: RebuttalSelector },
-    { title: 'Final Review', component: FinalReviewScene },
-    { title: 'Fallacy Spotting', component: FallacySpottingScene }
+    { title: 'Final Review', component: FinalReviewScene }
   ];
 
   const handleNext = () => {
