@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import HeroSection from './HeroSection';
 import ProgressBar from './ProgressBar';
 import CharacterChoiceScreen from './CharacterChoiceScreen';
 import RuleBreakingScene from './RuleBreakingScene';
@@ -12,6 +13,7 @@ import { Trophy, Star, RotateCcw } from 'lucide-react';
 
 const MinimalApp: React.FC = () => {
   const [currentScene, setCurrentScene] = useState(0);
+  const [showHero, setShowHero] = useState(true);
   const [completedScenes, setCompletedScenes] = useState<Set<number>>(new Set());
   const [showLevel2, setShowLevel2] = useState(false);
   const [level2Completed, setLevel2Completed] = useState(false);
@@ -48,7 +50,28 @@ const MinimalApp: React.FC = () => {
   const handleLevel3Complete = () => {
     setLevel3Completed(true);
     setShowLevel3(false);
+    setShowHero(true); // Return to hero after completing everything
   };
+
+  const handleStartQuest = () => {
+    setShowHero(false);
+    setCurrentScene(0);
+  };
+
+  const handleHowItWorks = () => {
+    // Could show a tutorial or info modal
+    alert('Tutorial coming soon! For now, click "Start Your Quest" to begin learning debate fundamentals.');
+  };
+
+  // Show Hero Section
+  if (showHero) {
+    return (
+      <HeroSection 
+        onStartQuest={handleStartQuest}
+        onHowItWorks={handleHowItWorks}
+      />
+    );
+  }
 
   // Show Level 2 if requested
   if (showLevel2) {
