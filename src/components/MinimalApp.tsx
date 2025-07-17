@@ -86,41 +86,34 @@ const MinimalApp: React.FC = () => {
           
           <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">What You've Learned</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
                   <span className="text-white font-bold text-xl">1</span>
                 </div>
                 <h3 className="font-semibold text-gray-800">Debate Roles</h3>
-                <p className="text-sm text-gray-600">Understanding team positions</p>
+                <p className="text-sm text-gray-600">Character roles & responsibilities</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-3">
                   <span className="text-white font-bold text-xl">2</span>
                 </div>
-                <h3 className="font-semibold text-gray-800">Rule Recognition</h3>
-                <p className="text-sm text-gray-600">Spotting violations</p>
+                <h3 className="font-semibold text-gray-800">Rule Breaking</h3>
+                <p className="text-sm text-gray-600">Spotting debate violations</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
                   <span className="text-white font-bold text-xl">3</span>
                 </div>
-                <h3 className="font-semibold text-gray-800">Effective Rebuttals</h3>
-                <p className="text-sm text-gray-600">Countering arguments</p>
+                <h3 className="font-semibold text-gray-800">Rebuttal Practice</h3>
+                <p className="text-sm text-gray-600">Choosing strong responses</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
                   <span className="text-white font-bold text-xl">4</span>
                 </div>
-                <h3 className="font-semibold text-gray-800">Judging Skills</h3>
-                <p className="text-sm text-gray-600">Evaluating debates</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-white font-bold text-xl">5</span>
-                </div>
-                <h3 className="font-semibold text-gray-800">Fallacy Detection</h3>
-                <p className="text-sm text-gray-600">Logical reasoning</p>
+                <h3 className="font-semibold text-gray-800">Final Review</h3>
+                <p className="text-sm text-gray-600">Judging debate quality</p>
               </div>
             </div>
           </div>
