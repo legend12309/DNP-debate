@@ -106,8 +106,6 @@ const MinimalApp: React.FC = () => {
   const totalXP = Object.values(sceneXP).reduce((sum, xp) => sum + xp, 0);
   const currentSceneName = currentScene < scenes.length ? scenes[currentScene].title : 'Level Complete';
 
-  // Show Retake Screen
-  if (showRetake) {
   const handleStartQuest = () => {
     setShowHero(false);
     setCurrentScene(0);
@@ -118,8 +116,8 @@ const MinimalApp: React.FC = () => {
     alert('Tutorial coming soon! For now, click "Start Your Quest" to begin learning debate fundamentals.');
   };
 
-  // Show Hero Section
-  if (showHero) {
+  // Show Retake Screen
+  if (showRetake) {
     return (
       <RetakeLevelScreen
         levelName="Level 1: The Basics"
