@@ -106,6 +106,19 @@ const MinimalApp: React.FC = () => {
   const totalXP = Object.values(sceneXP).reduce((sum, xp) => sum + xp, 0);
   const currentSceneName = currentScene < scenes.length ? scenes[currentScene].title : 'Level Complete';
 
+  // Show Retake Screen
+  if (showRetake) {
+    return (
+      <RetakeLevelScreen
+        levelName="Level 1: The Basics"
+        currentXP={totalXP}
+        requiredXP={30}
+        onRetake={handleRetake}
+        onBack={() => setShowHero(true)}
+      />
+    );
+  }
+
   const handleStartQuest = () => {
     setShowHero(false);
     setCurrentScene(0);
@@ -116,15 +129,12 @@ const MinimalApp: React.FC = () => {
     alert('Tutorial coming soon! For now, click "Start Your Quest" to begin learning debate fundamentals.');
   };
 
-  // Show Retake Screen
-  if (showRetake) {
+  // Show Hero Section
+  if (showHero) {
     return (
-      <RetakeLevelScreen
-        levelName="Level 1: The Basics"
-        currentXP={totalXP}
-        requiredXP={30}
-        onRetake={handleRetake}
-        onBack={() => setShowHero(true)}
+      <HeroSection 
+        onStartQuest={handleStartQuest}
+        onHowItWorks={handleHowItWorks}
       />
     );
   }
@@ -162,16 +172,6 @@ const MinimalApp: React.FC = () => {
           onComplete={handleAIMentorComplete}
         />
       </>
-    );
-  }
-
-  // Show Hero Section
-  if (showHero) {
-    return (
-      <HeroSection 
-        onStartQuest={handleStartQuest}
-        onHowItWorks={handleHowItWorks}
-      />
     );
   }
 
