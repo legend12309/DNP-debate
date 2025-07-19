@@ -33,7 +33,6 @@ const MinimalApp: React.FC = () => {
     { title: 'Final Review', component: FinalReviewScene }
   ];
 
-  const handleNext = (responses?: any[], xpEarned: number = 10) => {
   const handleNext = (responses: any[] = [], xpEarned: number = 10) => {
     const newSceneXP = { ...sceneXP, [currentScene]: xpEarned };
     setSceneXP(newSceneXP);
