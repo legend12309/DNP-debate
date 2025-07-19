@@ -34,12 +34,11 @@ const MinimalApp: React.FC = () => {
   ];
 
   const handleNext = (responses?: any[], xpEarned: number = 10) => {
+  const handleNext = (responses: any[] = [], xpEarned: number = 10) => {
     const newSceneXP = { ...sceneXP, [currentScene]: xpEarned };
     setSceneXP(newSceneXP);
     
-    if (responses) {
-      setPlayerResponses(prev => [...prev, ...responses]);
-    }
+    setPlayerResponses(prev => [...prev, ...responses]);
 
     // Check if player has enough XP to continue (30 XP required)
     const totalXP = Object.values(newSceneXP).reduce((sum, xp) => sum + xp, 0);
