@@ -40,9 +40,6 @@ export interface GameProgress {
   earnedBadges: string[];
   sceneProgress: { [key: string]: boolean };
   module2Unlocked: boolean;
-  levelXP: { [key: string]: number };
-  retakeCount: { [key: string]: number };
-  aiInsights: { [key: string]: string };
 }
 
 export interface GameState {

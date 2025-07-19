@@ -8,10 +8,7 @@ const initialProgress: GameProgress = {
   level: 1,
   earnedBadges: [],
   sceneProgress: {},
-  module2Unlocked: false,
-  levelXP: {},
-  retakeCount: {},
-  aiInsights: {}
+  module2Unlocked: false
 };
 
 export const useGameState = () => {

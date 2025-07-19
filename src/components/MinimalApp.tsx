@@ -7,24 +7,18 @@ import RebuttalSelector from './RebuttalSelector';
 import FinalReviewScene from './FinalReviewScene';
 import FallacyFightersLevel2 from './FallacyFightersLevel2';
 import GrandPersuasionLevel3 from './GrandPersuasionLevel3';
-import RetakeLevelScreen from './RetakeLevelScreen';
-import AIInsightPanel from './AIInsightPanel';
-import AIDebateMentor from './AIDebateMentor';
+import AudienceMatchmakerScene from './AudienceMatchmakerScene';
+import PersuasionMixerScene from './PersuasionMixerScene';
 import { Trophy, Star, RotateCcw } from 'lucide-react';
 
 const MinimalApp: React.FC = () => {
   const [currentScene, setCurrentScene] = useState(0);
   const [showHero, setShowHero] = useState(true);
   const [completedScenes, setCompletedScenes] = useState<Set<number>>(new Set());
-  const [sceneXP, setSceneXP] = useState<{ [key: number]: number }>({});
-  const [showRetake, setShowRetake] = useState(false);
-  const [showAIInsight, setShowAIInsight] = useState(false);
-  const [showAIMentor, setShowAIMentor] = useState(false);
   const [showLevel2, setShowLevel2] = useState(false);
   const [level2Completed, setLevel2Completed] = useState(false);
   const [showLevel3, setShowLevel3] = useState(false);
   const [level3Completed, setLevel3Completed] = useState(false);
-  const [playerResponses, setPlayerResponses] = useState<any[]>([]);
 
   const scenes = [
     { title: 'Character Choice', component: CharacterChoiceScreen },
@@ -33,37 +27,12 @@ const MinimalApp: React.FC = () => {
     { title: 'Final Review', component: FinalReviewScene }
   ];
 
-  const handleNext = (responses: any[] = [], xpEarned: number = 10) => {
-    const newSceneXP = { ...sceneXP, [currentScene]: xpEarned };
-    setSceneXP(newSceneXP);
-    
-    setPlayerResponses(prev => [...prev, ...(Array.isArray(responses) ? responses : [])]);
-
-    // Check if player has enough XP to continue (30 XP required)
-    const totalXP = Object.values(newSceneXP).reduce((sum, xp) => sum + xp, 0);
-    
-    if (totalXP < 30 && currentScene === scenes.length - 1) {
-      setShowRetake(true);
-      return;
-    }
-
+  const handleNext = () => {
     setCompletedScenes(prev => new Set([...prev, currentScene]));
-    
-    // Show AI insight after each scene
-    setShowAIInsight(true);
-  };
-
-  const handleAIInsightContinue = () => {
-    setShowAIInsight(false);
-    
     if (currentScene < scenes.length - 1) {
       setCurrentScene(prev => prev + 1);
     } else {
-      // Show AI Mentor before final level
-      if (!level2Completed) {
-        setShowAIMentor(true);
-        return;
-      }
+      // All scenes completed
       setCurrentScene(scenes.length); // Show completion screen
     }
   };
@@ -71,18 +40,6 @@ const MinimalApp: React.FC = () => {
   const handleRestart = () => {
     setCurrentScene(0);
     setCompletedScenes(new Set());
-    setSceneXP({});
-    setPlayerResponses([]);
-    setShowRetake(false);
-  };
-
-  const handleRetake = () => {
-    setCurrentScene(0);
-    setCompletedScenes(new Set());
-    setSceneXP({});
-    setPlayerResponses([]);
-    setShowRetake(false);
-    setShowHero(false);
   };
 
   const handleLevel2Complete = () => {
@@ -95,27 +52,6 @@ const MinimalApp: React.FC = () => {
     setShowLevel3(false);
     setShowHero(true); // Return to hero after completing everything
   };
-
-  const handleAIMentorComplete = () => {
-    setShowAIMentor(false);
-    setCurrentScene(scenes.length); // Show completion screen
-  };
-
-  const totalXP = Object.values(sceneXP).reduce((sum, xp) => sum + xp, 0);
-  const currentSceneName = currentScene < scenes.length ? scenes[currentScene].title : 'Level Complete';
-
-  // Show Retake Screen
-  if (showRetake) {
-    return (
-      <RetakeLevelScreen
-        levelName="Level 1: The Basics"
-        currentXP={totalXP}
-        requiredXP={30}
-        onRetake={handleRetake}
-        onBack={() => setShowHero(true)}
-      />
-    );
-  }
 
   const handleStartQuest = () => {
     setShowHero(false);
@@ -134,42 +70,6 @@ const MinimalApp: React.FC = () => {
         onStartQuest={handleStartQuest}
         onHowItWorks={handleHowItWorks}
       />
-    );
-  }
-
-  // Show AI Insight Panel
-  if (showAIInsight) {
-    return (
-      <>
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 px-6 py-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-2xl font-bold text-gray-800">Processing your performance...</h1>
-          </div>
-        </div>
-        <AIInsightPanel
-          levelName={currentSceneName}
-          playerResponses={playerResponses}
-          xpEarned={sceneXP[currentScene] || 0}
-          onContinue={handleAIInsightContinue}
-        />
-      </>
-    );
-  }
-
-  // Show AI Mentor
-  if (showAIMentor) {
-    return (
-      <>
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 px-6 py-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-2xl font-bold text-gray-800">Preparing for final challenge...</h1>
-          </div>
-        </div>
-        <AIDebateMentor
-          onClose={() => setShowAIMentor(false)}
-          onComplete={handleAIMentorComplete}
-        />
-      </>
     );
   }
 
@@ -209,12 +109,6 @@ const MinimalApp: React.FC = () => {
           
           <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-6">What You've Learned</h2>
-            <div className="bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl p-4 mb-6">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold text-gray-800">Total XP Earned:</span>
-                <span className="text-2xl font-bold text-green-600">{totalXP}</span>
-              </div>
-            </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -246,16 +140,6 @@ const MinimalApp: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {totalXP >= 30 && (
-            <div className="bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl p-6 mb-8">
-              <div className="flex items-center gap-3 mb-3">
-                <Trophy className="w-8 h-8 text-yellow-500" />
-                <h3 className="text-xl font-bold text-gray-800">Comeback Champ Badge Earned!</h3>
-              </div>
-              <p className="text-gray-700">You've mastered the fundamentals and earned enough XP to advance!</p>
-            </div>
-          )}
 
           <div className="flex gap-4 justify-center">
             <button
