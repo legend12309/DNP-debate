@@ -4,6 +4,7 @@ import FallacySpottingChallenge from './FallacySpottingChallenge';
 import EvidenceEvaluationChallenge from './EvidenceEvaluationChallenge';
 import ArgumentStructureChallenge from './ArgumentStructureChallenge';
 import { fallacySpottingData, evidenceEvaluationData, argumentStructureData } from '../data/fallacyData';
+import MentorOwl from './MentorOwl';
 
 interface FallacyFightersLevel2Props {
   onBack: () => void;
@@ -138,7 +139,7 @@ const FallacyFightersLevel2: React.FC<FallacyFightersLevel2Props> = ({ onBack, o
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 px-6 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 px-6 py-8 relative">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <button
@@ -221,6 +222,12 @@ const FallacyFightersLevel2: React.FC<FallacyFightersLevel2Props> = ({ onBack, o
           </div>
         </div>
       </div>
+      <MentorOwl 
+        currentLevel={2}
+        currentScene={currentChallenge}
+        userProgress={{ completedChallenges, totalXP }}
+        onSuggestRetake={() => setCurrentChallenge('menu')}
+      />
     </div>
   );
 };

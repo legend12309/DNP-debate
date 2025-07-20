@@ -7,6 +7,7 @@ import RebuttalSelector from './RebuttalSelector';
 import FinalReviewScene from './FinalReviewScene';
 import FallacyFightersLevel2 from './FallacyFightersLevel2';
 import GrandPersuasionLevel3 from './GrandPersuasionLevel3';
+import MentorOwl from './MentorOwl';
 import AudienceMatchmakerScene from './AudienceMatchmakerScene';
 import PersuasionMixerScene from './PersuasionMixerScene';
 import { Trophy, Star, RotateCcw } from 'lucide-react';
@@ -21,11 +22,24 @@ const MinimalApp: React.FC = () => {
   const [level3Completed, setLevel3Completed] = useState(false);
 
   const scenes = [
-    { title: 'Character Choice', component: CharacterChoiceScreen },
-    { title: 'Rule Breaking', component: RuleBreakingScene },
-    { title: 'Rebuttal Practice', component: RebuttalSelector },
-    { title: 'Final Review', component: FinalReviewScene }
+    { title: 'Character Choice', component: CharacterChoiceScreen, id: 'character-choice' },
+    { title: 'Rule Breaking', component: RuleBreakingScene, id: 'rule-breaking' },
+    { title: 'Rebuttal Practice', component: RebuttalSelector, id: 'rebuttal' },
+    { title: 'Final Review', component: FinalReviewScene, id: 'final-review' }
   ];
+
+  const getCurrentLevel = () => {
+    if (showLevel2) return 2;
+    if (showLevel3) return 3;
+    return 1;
+  };
+
+  const getCurrentScene = () => {
+    if (showLevel2) return 'fallacy-fighters';
+    if (showLevel3) return 'grand-persuasion';
+    if (currentScene < scenes.length) return scenes[currentScene].id;
+    return 'completed';
+  };
 
   const handleNext = () => {
     setCompletedScenes(prev => new Set([...prev, currentScene]));
@@ -188,9 +202,15 @@ const MinimalApp: React.FC = () => {
   const CurrentSceneComponent = scenes[currentScene].component;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
       <ProgressBar current={currentScene + 1} total={scenes.length} />
       <CurrentSceneComponent onNext={handleNext} />
+      <MentorOwl 
+        currentLevel={getCurrentLevel()}
+        currentScene={getCurrentScene()}
+        userProgress={{ completedScenes, currentScene }}
+        onSuggestRetake={handleRestart}
+      />
     </div>
   );
 };

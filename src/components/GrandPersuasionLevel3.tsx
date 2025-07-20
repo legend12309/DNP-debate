@@ -11,6 +11,7 @@ import {
   mixPhrases, 
   speechParts 
 } from '../data/grandPersuasionData';
+import MentorOwl from './MentorOwl';
 
 interface GrandPersuasionLevel3Props {
   onBack: () => void;
@@ -182,7 +183,7 @@ const GrandPersuasionLevel3: React.FC<GrandPersuasionLevel3Props> = ({ onBack, o
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 px-6 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 px-6 py-8 relative">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <button
@@ -286,6 +287,12 @@ const GrandPersuasionLevel3: React.FC<GrandPersuasionLevel3Props> = ({ onBack, o
           )}
         </div>
       </div>
+      <MentorOwl 
+        currentLevel={3}
+        currentScene={currentChallenge}
+        userProgress={{ completedChallenges, totalScore }}
+        onSuggestRetake={() => setCurrentChallenge('menu')}
+      />
     </div>
   );
 };
