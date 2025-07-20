@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, HelpCircle, Trophy, Zap, RotateCcw, Users, Bot, Gavel } from 'lucide-react';
+import { Play, HelpCircle, Trophy, Zap, RotateCcw, Users, Bot, Gavel, Star, Target, BookOpen, Award } from 'lucide-react';
 
 interface HeroSectionProps {
   onStartQuest: () => void;
@@ -8,161 +8,268 @@ interface HeroSectionProps {
 
 const HeroSection: React.FC<HeroSectionProps> = ({ onStartQuest, onHowItWorks }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const testimonials = [
+    { text: "I went from shy to confident speaker!", author: "Sarah, 16", rating: 5 },
+    { text: "Finally understand how debates work!", author: "Marcus, 15", rating: 5 },
+    { text: "Made learning debate actually fun!", author: "Emma, 17", rating: 5 }
+  ];
 
   useEffect(() => {
     setIsVisible(true);
+    const interval = setInterval(() => {
+      setCurrentTestimonial(prev => (prev + 1) % testimonials.length);
+    }, 3000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-800 via-green-700 to-green-900 relative overflow-hidden">
-      {/* Chalkboard texture overlay */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="w-full h-full bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-yellow-300 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-blue-300 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-32 left-1/4 w-28 h-28 bg-pink-300 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      {/* Floating chalk dust particles */}
+      {/* Floating Achievement Icons */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(6)].map((_, i) => (
+        {[
+          { icon: Trophy, color: 'text-yellow-400', position: 'top-1/4 left-1/6' },
+          { icon: Star, color: 'text-blue-400', position: 'top-1/3 right-1/5' },
+          { icon: Target, color: 'text-pink-400', position: 'bottom-1/3 left-1/8' },
+          { icon: Award, color: 'text-purple-400', position: 'bottom-1/4 right-1/6' }
+        ].map((item, index) => (
           <div
-            key={i}
-            className="absolute w-2 h-2 bg-cream-100 rounded-full opacity-30 animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
-            }}
-          />
+            key={index}
+            className={`absolute ${item.position} animate-float opacity-30`}
+            style={{ animationDelay: `${index * 0.5}s`, animationDuration: '4s' }}
+          >
+            <item.icon className={`w-8 h-8 ${item.color}`} />
+          </div>
         ))}
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 flex flex-col lg:flex-row items-center min-h-screen">
-        {/* Left Content */}
-        <div className={`lg:w-1/2 text-center lg:text-left transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          {/* Badge Strip */}
-          <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
-            <div className="flex items-center gap-2 bg-cream-50/90 backdrop-blur-sm px-4 py-2 rounded-full border border-cream-200 shadow-lg">
-              <Play className="w-4 h-4 text-green-600" />
-              <span className="text-sm font-medium text-green-800">Learn by Playing</span>
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        {/* Top Navigation Bar */}
+        <div className={`flex justify-between items-center mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+              <span className="text-xl font-bold text-white">🎯</span>
             </div>
-            <div className="flex items-center gap-2 bg-yellow-50/90 backdrop-blur-sm px-4 py-2 rounded-full border border-yellow-200 shadow-lg">
-              <Trophy className="w-4 h-4 text-yellow-600" />
-              <span className="text-sm font-medium text-yellow-800">Earn XP & Badges</span>
-            </div>
-            <div className="flex items-center gap-2 bg-blue-50/90 backdrop-blur-sm px-4 py-2 rounded-full border border-blue-200 shadow-lg">
-              <RotateCcw className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-800">Retake & Improve</span>
-            </div>
+            <span className="text-xl font-bold text-cream-50">Debate Quest</span>
           </div>
-
-          {/* Main Heading */}
-          <h1 className="text-4xl lg:text-6xl font-bold text-cream-50 mb-6 leading-tight font-['Caveat']">
-            Master the Art of{' '}
-            <span className="text-transparent bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text">
-              Debate
-            </span>
-            , One Level at a Time
-          </h1>
-
-          {/* Subheading */}
-          <p className="text-xl lg:text-2xl text-green-100 mb-8 leading-relaxed font-['Poppins']">
-            An interactive journey to unlock{' '}
-            <span className="text-yellow-200 font-semibold">confidence</span>,{' '}
-            <span className="text-blue-200 font-semibold">logic</span>, and{' '}
-            <span className="text-pink-200 font-semibold">voice</span>.
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <button
-              onClick={onStartQuest}
-              className="group bg-gradient-to-r from-yellow-400 to-orange-400 text-green-900 px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3 animate-bounce"
-            >
-              <Zap className="w-6 h-6 group-hover:rotate-12 transition-transform" />
-              Start Your Quest
-            </button>
-            
-            <button
-              onClick={onHowItWorks}
-              className="bg-cream-50/20 backdrop-blur-sm text-cream-50 border-2 border-cream-50/30 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-cream-50/30 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
-            >
-              <HelpCircle className="w-5 h-5" />
-              How It Works
-            </button>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-12 grid grid-cols-3 gap-6 text-center">
-            <div className="bg-green-800/50 backdrop-blur-sm rounded-2xl p-4 border border-green-600/30">
-              <div className="text-2xl font-bold text-yellow-300">4</div>
-              <div className="text-sm text-green-200">Core Skills</div>
-            </div>
-            <div className="bg-green-800/50 backdrop-blur-sm rounded-2xl p-4 border border-green-600/30">
-              <div className="text-2xl font-bold text-blue-300">3</div>
-              <div className="text-sm text-green-200">Levels</div>
-            </div>
-            <div className="bg-green-800/50 backdrop-blur-sm rounded-2xl p-4 border border-green-600/30">
-              <div className="text-2xl font-bold text-pink-300">∞</div>
-              <div className="text-sm text-green-200">Practice</div>
-            </div>
+          <div className="hidden md:flex items-center gap-6 text-green-200">
+            <span className="hover:text-cream-50 cursor-pointer transition-colors">Features</span>
+            <span className="hover:text-cream-50 cursor-pointer transition-colors">Levels</span>
+            <span className="hover:text-cream-50 cursor-pointer transition-colors">Progress</span>
           </div>
         </div>
 
-        {/* Right Content - Characters */}
-        <div className={`lg:w-1/2 mt-12 lg:mt-0 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
-          <div className="relative">
-            {/* Main character circle */}
-            <div className="relative mx-auto w-80 h-80 lg:w-96 lg:h-96">
-              {/* Background glow */}
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 rounded-full blur-3xl"></div>
+        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+          {/* Left Content */}
+          <div className={`space-y-8 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+            {/* Problem Statement */}
+            <div className="bg-red-100/10 backdrop-blur-sm border border-red-300/20 rounded-2xl p-4 mb-6">
+              <div className="flex items-center gap-3 text-red-200">
+                <div className="w-6 h-6 bg-red-400 rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm">!</span>
+                </div>
+                <span className="text-sm font-medium">78% of students fear public speaking more than death</span>
+              </div>
+            </div>
+
+            {/* Main Value Proposition */}
+            <div>
+              <h1 className="text-5xl lg:text-7xl font-bold text-cream-50 mb-6 leading-tight">
+                Turn Fear Into
+                <span className="block text-transparent bg-gradient-to-r from-yellow-300 via-orange-300 to-pink-300 bg-clip-text animate-pulse">
+                  Fearless
+                </span>
+                <span className="block">Debating</span>
+              </h1>
               
-              {/* Character avatars positioned around the circle */}
-              <div className="relative w-full h-full">
-                {/* Debater */}
-                <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-br from-blue-400 to-blue-500 w-20 h-20 rounded-full flex items-center justify-center shadow-xl animate-float">
-                  <Users className="w-10 h-10 text-white" />
-                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap">
-                    Debater
+              <p className="text-xl lg:text-2xl text-green-100 mb-8 leading-relaxed">
+                Master debate fundamentals through 
+                <span className="text-yellow-200 font-semibold"> interactive stories</span>, 
+                <span className="text-blue-200 font-semibold"> gamified challenges</span>, and 
+                <span className="text-pink-200 font-semibold"> AI mentorship</span>.
+              </p>
+            </div>
+
+            {/* Social Proof */}
+            <div className="bg-green-800/30 backdrop-blur-sm rounded-2xl p-6 border border-green-600/30">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="flex -space-x-2">
+                  {[1,2,3,4].map(i => (
+                    <div key={i} className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full border-2 border-white flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">{String.fromCharCode(64 + i)}</span>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <div className="flex text-yellow-400 mb-1">
+                    {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-current" />)}
+                  </div>
+                  <p className="text-green-200 text-sm">Join 10,000+ students building confidence</p>
+                </div>
+              </div>
+              
+              <div className="transition-all duration-500">
+                <p className="text-green-100 italic mb-2">"{testimonials[currentTestimonial].text}"</p>
+                <p className="text-green-300 text-sm">— {testimonials[currentTestimonial].author}</p>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={onStartQuest}
+                className="group bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-2xl hover:shadow-yellow-400/25 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+              >
+                <Play className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                Start Your Debate Journey
+                <div className="bg-white/20 px-2 py-1 rounded-lg text-sm">FREE</div>
+              </button>
+              
+              <button
+                onClick={onHowItWorks}
+                className="bg-cream-50/10 backdrop-blur-sm text-cream-50 border-2 border-cream-50/30 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-cream-50/20 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+              >
+                <HelpCircle className="w-5 h-5" />
+                See How It Works
+              </button>
+            </div>
+
+            {/* Feature Badges */}
+            <div className="flex flex-wrap gap-3">
+              {[
+                { icon: Play, text: "Interactive Stories", color: "from-blue-400 to-blue-500" },
+                { icon: Trophy, text: "Earn XP & Badges", color: "from-yellow-400 to-orange-500" },
+                { icon: RotateCcw, text: "Practice Unlimited", color: "from-green-400 to-green-500" },
+                { icon: Bot, text: "AI Mentor Guide", color: "from-purple-400 to-pink-500" }
+              ].map((badge, index) => (
+                <div
+                  key={index}
+                  className={`flex items-center gap-2 bg-gradient-to-r ${badge.color} bg-opacity-90 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20 shadow-lg text-white text-sm font-medium`}
+                >
+                  <badge.icon className="w-4 h-4" />
+                  {badge.text}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Content - Interactive Demo */}
+          <div className={`relative transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
+            {/* Main Demo Container */}
+            <div className="relative">
+              {/* Background Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 via-orange-400/20 to-pink-400/20 rounded-3xl blur-3xl"></div>
+              
+              {/* Demo Screen */}
+              <div className="relative bg-green-800/40 backdrop-blur-xl rounded-3xl border border-green-600/30 p-8 shadow-2xl">
+                {/* Demo Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center">
+                      <BookOpen className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-green-100 font-semibold">Level 1: The Basics</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-yellow-400">
+                    <Zap className="w-4 h-4" />
+                    <span className="text-sm font-bold">+100 XP</span>
                   </div>
                 </div>
 
-                {/* Mentor Bot */}
-                <div className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gradient-to-br from-purple-400 to-purple-500 w-20 h-20 rounded-full flex items-center justify-center shadow-xl animate-float" style={{ animationDelay: '1s' }}>
-                  <Bot className="w-10 h-10 text-white" />
-                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap">
-                    Mentor
+                {/* Character Selection Demo */}
+                <div className="space-y-4 mb-6">
+                  <h3 className="text-green-100 font-bold text-lg">Choose Your Role:</h3>
+                  <div className="grid grid-cols-3 gap-3">
+                    {[
+                      { icon: Users, name: "Debater", color: "from-blue-400 to-blue-500" },
+                      { icon: Bot, name: "Mentor", color: "from-purple-400 to-purple-500" },
+                      { icon: Gavel, name: "Judge", color: "from-green-400 to-green-500" }
+                    ].map((character, index) => (
+                      <div
+                        key={index}
+                        className={`bg-gradient-to-br ${character.color} p-4 rounded-xl text-center cursor-pointer hover:scale-105 transition-transform`}
+                      >
+                        <character.icon className="w-8 h-8 text-white mx-auto mb-2" />
+                        <span className="text-white text-sm font-medium">{character.name}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Moderator */}
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-br from-green-400 to-green-500 w-20 h-20 rounded-full flex items-center justify-center shadow-xl animate-float" style={{ animationDelay: '2s' }}>
-                  <Gavel className="w-10 h-10 text-white" />
-                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap">
-                    Moderator
+                {/* Progress Indicator */}
+                <div className="bg-green-700/50 rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-green-200 text-sm">Progress</span>
+                    <span className="text-green-200 text-sm">1/4 Complete</span>
+                  </div>
+                  <div className="w-full bg-green-600 rounded-full h-2">
+                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full w-1/4 transition-all duration-1000"></div>
                   </div>
                 </div>
+              </div>
 
-                {/* Central logo/icon */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-yellow-400 to-orange-400 w-32 h-32 rounded-full flex items-center justify-center shadow-2xl">
-                  <div className="text-4xl font-bold text-green-900">🎯</div>
+              {/* Floating Achievement Notifications */}
+              <div className="absolute -top-4 -right-4 bg-yellow-400 text-yellow-900 px-4 py-2 rounded-xl shadow-lg animate-bounce">
+                <div className="flex items-center gap-2">
+                  <Trophy className="w-4 h-4" />
+                  <span className="text-sm font-bold">Badge Earned!</span>
+                </div>
+              </div>
+
+              <div className="absolute -bottom-4 -left-4 bg-blue-400 text-blue-900 px-4 py-2 rounded-xl shadow-lg animate-pulse">
+                <div className="flex items-center gap-2">
+                  <Star className="w-4 h-4" />
+                  <span className="text-sm font-bold">Level Up!</span>
                 </div>
               </div>
             </div>
 
-            {/* Floating elements */}
-            <div className="absolute top-8 right-8 bg-yellow-200 text-yellow-800 px-3 py-2 rounded-lg text-sm font-semibold shadow-lg animate-bounce" style={{ animationDelay: '0.5s' }}>
-              +10 XP
-            </div>
-            <div className="absolute bottom-8 left-8 bg-pink-200 text-pink-800 px-3 py-2 rounded-lg text-sm font-semibold shadow-lg animate-bounce" style={{ animationDelay: '1.5s' }}>
-              🏆 Badge
+            {/* Learning Path Preview */}
+            <div className="mt-8 grid grid-cols-3 gap-4">
+              {[
+                { level: "1", title: "Basics", status: "active", color: "from-green-400 to-green-500" },
+                { level: "2", title: "Logic", status: "locked", color: "from-blue-400 to-blue-500" },
+                { level: "3", title: "Master", status: "locked", color: "from-purple-400 to-purple-500" }
+              ].map((level, index) => (
+                <div
+                  key={index}
+                  className={`bg-gradient-to-br ${level.color} ${level.status === 'locked' ? 'opacity-50' : ''} p-4 rounded-xl text-center`}
+                >
+                  <div className="text-white font-bold text-lg mb-1">Level {level.level}</div>
+                  <div className="text-white/90 text-sm">{level.title}</div>
+                  {level.status === 'active' && (
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full mx-auto mt-2 animate-pulse"></div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom wave decoration */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-green-900 to-transparent"></div>
+        {/* Bottom Stats Section */}
+        <div className={`mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          {[
+            { number: "10K+", label: "Active Learners", icon: Users },
+            { number: "95%", label: "Confidence Boost", icon: Trophy },
+            { number: "3", label: "Skill Levels", icon: Target },
+            { number: "24/7", label: "AI Mentorship", icon: Bot }
+          ].map((stat, index) => (
+            <div key={index} className="bg-green-800/30 backdrop-blur-sm rounded-2xl p-6 text-center border border-green-600/30">
+              <stat.icon className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
+              <div className="text-2xl font-bold text-cream-50 mb-1">{stat.number}</div>
+              <div className="text-green-200 text-sm">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
