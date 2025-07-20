@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Lightbulb, HelpCircle } from 'lucide-react';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 interface Message {
   id: string;
@@ -14,6 +15,10 @@ interface MentorOwlProps {
   userProgress: any;
   onSuggestRetake?: () => void;
 }
+
+// Initialize Google AI
+const genAI = new GoogleGenerativeAI('AIzaSyBU1Pz6vJL7odMqh2x2X2KQ765edxB8a0c');
+const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
 const MentorOwl: React.FC<MentorOwlProps> = ({ 
   currentLevel, 
@@ -78,11 +83,49 @@ const MentorOwl: React.FC<MentorOwlProps> = ({
   const generateResponse = async (userMessage: string) => {
     setIsTyping(true);
     
-    // Simulate AI response delay
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+    try {
+      // Create context-aware prompt
+      const systemPrompt = `You are Mentor Owl 🦉, a wise and encouraging debate mentor inside the "Debate Quest: The Basics Battle" learning app. 
+
+CORE PERSONALITY:
+- Act like a supportive debate coach who uses the Socratic method
+- Never give direct answers - always guide users to think for themselves
+- Keep responses short, clear, and educational (2-3 sentences max)
+- Use encouraging language and ask guiding questions
+- Include the 🦉 emoji occasionally but don't overuse it
+
+CURRENT CONTEXT:
+- User is on Level ${currentLevel}
+- Current scene: ${currentScene}
+- User progress: ${JSON.stringify(userProgress)}
+
+LEVEL-SPECIFIC GUIDANCE:
+Level 1 (Basics): Help with debate roles, rule violations, rebuttals, and judging
+Level 2 (Fallacy Fighters): Guide on logical fallacies, evidence evaluation, argument structure
+Level 3 (Grand Persuasion): Assist with emotional appeals, audience adaptation, persuasive techniques
+
+TEACHING APPROACH:
+- Ask "What do you think?" or "What's your reasoning?"
+- Point users toward clues in the current challenge
+- Help them discover patterns and connections
+- If they're stuck, give gentle hints that lead to insight
+
+User message: "${userMessage}"
+
+Respond as Mentor Owl with a helpful, guiding response:`;
+
+      const result = await model.generateContent(systemPrompt);
+      const response = result.response;
+      const aiResponse = response.text();
+      
+      addMessage(aiResponse, false);
+    } catch (error) {
+      console.error('Error generating AI response:', error);
+      // Fallback to local responses if API fails
+      const fallbackResponse = getMentorResponse(userMessage.toLowerCase());
+      addMessage(fallbackResponse, false);
+    }
     
-    const response = getMentorResponse(userMessage.toLowerCase());
-    addMessage(response, false);
     setIsTyping(false);
   };
 
